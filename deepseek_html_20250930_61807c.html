@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trinbarjam Elections Commission</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0044cc;
+      --secondary: #ffcc00;
+      --dark: #333;
+      --light: #f4f4f4;
+      --success: #28a745;
+      --danger: #dc3545;
+      --warning: #ffc107;
+      --info: #17a2b8;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background-color: var(--light);
+      color: #333;
+    }
+    
+    header {
+      background: linear-gradient(to right, #000, var(--primary), var(--secondary));
+      color: white;
+      padding: 15px 10px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .header-logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 0;
+    }
+    
+    .logo-img {
+      height: 80px;
+      width: auto;
+      max-width: 100%;
+      filter: brightness(0) invert(1);
+    }
+    
+    .tagline {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    
+    nav {
+      background: var(--dark);
+      display: flex;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    nav a {
+      color: white;
+      padding: 16px 24px;
+      text-decoration: none;
+      display: block;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    nav a:hover, nav a.active {
+      background: var(--primary);
+      color: var(--secondary);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+      min-height: 70vh;
+    }
+    
+    .page {
+      display: none;
+    }
+    
+    .page.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--primary);
+    }
+    
+    .page-header h2 {
+      color: var(--primary);
+      font-size: 2rem;
+    }
+    
+    .hero {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .hero h2 {
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin: 40px 0;
+    }
+    
+    .feature-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 25px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .feature-icon {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+    
+    .feature-card h3 {
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+    
+    .constituency-selector {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .constituency-btn {
+      padding: 10px 20px;
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+    
+    .constituency-btn:hover, .constituency-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .constituency-section {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 25px;
+      margin-bottom: 30px;
+      display: none;
+    }
+    
+    .constituency-section.active {
+      display: block;
+    }
+    
+    .constituency-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .constituency-header h3 {
+      color: var(--primary);
+      font-size: 1.8rem;
+    }
+    
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .summary-card {
+      background: #f8f9fa;
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .summary-card h4 {
+      color: var(--dark);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .summary-card .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    
+    th {
+      background: var(--primary);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    td {
+      padding: 12px 15px;
+      text-align: center;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    
+    .status-refund {
+      background: var(--success);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+    
+    .status-no-refund {
+      background: var(--danger);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+    
+    .rating {
+      color: var(--warning);
+      font-weight: bold;
+    }
+    
+    .party-dap { border-left: 4px solid #ff0000; }
+    .party-wna { border-left: 4px solid #0000ff; }
+    .party-upm { border-left: 4px solid #00aa00; }
+    
+    .about-content {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .about-content h3 {
+      color: var(--primary);
+      margin: 20px 0 10px;
+    }
+    
+    .about-content p {
+      margin-bottom: 15px;
+    }
+    
+    .mission-vision {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin: 30px 0;
+    }
+    
+    .mission, .vision {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .mission h3, .vision h3 {
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+    
+    footer {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 25px 10px;
+      margin-top: 40px;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      text-align: left;
+    }
+    
+    .footer-section h3 {
+      color: var(--secondary);
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+    
+    .footer-section p, .footer-section a {
+      color: #ccc;
+      margin-bottom: 10px;
+      display: block;
+      text-decoration: none;
+    }
+    
+    .footer-section a:hover {
+      color: white;
+    }
+    
+    .copyright {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #555;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+    
+    .chart-container {
+      margin: 30px 0;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .chart {
+      height: 300px;
+      background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+      border-radius: 5px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      padding: 20px;
+    }
+    
+    .bar {
+      width: 80px;
+      background: var(--primary);
+      border-radius: 5px 5px 0 0;
+      position: relative;
+      transition: height 0.5s ease;
+    }
+    
+    .bar-label {
+      position: absolute;
+      bottom: -25px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    .bar-value {
+      position: absolute;
+      top: -25px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Pie Chart Styles */
+    .pie-chart-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 40px;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+    
+    .pie-chart {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #ff0000 0% 45%,
+        #0000ff 45% 75%,
+        #00aa00 75% 100%
+      );
+    }
+    
+    .pie-chart-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    
+    .pie-legend {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 8px;
+      background: #f8f9fa;
+      border-radius: 5px;
+    }
+    
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+      margin-right: 10px;
+    }
+    
+    .legend-dap { background: #ff0000; }
+    .legend-wna { background: #0000ff; }
+    .legend-upm { background: #00aa00; }
+    
+    .legend-info {
+      flex: 1;
+    }
+    
+    .legend-party {
+      font-weight: bold;
+      color: var(--dark);
+    }
+    
+    .legend-percentage {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0, 68, 204, 0.1);
+    }
+    
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    
+    .submit-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+      background: #0033a3;
+    }
+    
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    
+    .form-message {
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 15px;
+      text-align: center;
+      font-weight: 500;
+    }
+    
+    .form-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .form-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .constituency-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      table {
+        font-size: 14px;
+      }
+      
+      th, td {
+        padding: 8px 10px;
+      }
+      
+      .chart {
+        flex-direction: column;
+        height: auto;
+        align-items: center;
+        gap: 20px;
+      }
+      
+      .bar {
+        width: 80%;
+        height: 40px !important;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .bar-label, .bar-value {
+        position: static;
+        color: white;
+      }
+      
+      .bar-value {
+        margin-right: 10px;
+      }
+      
+      .pie-chart-container {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .pie-chart {
+        width: 150px;
+        height: 150px;
+      }
+      
+      .pie-chart-center {
+        width: 60px;
+        height: 60px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-logo">
+      <img src="logo.png" alt="Trinbarjam Elections Commission Logo" class="logo-img">
+    </div>
+    <p class="tagline">Free and Fair Elections for All</p>
+  </header>
+
+  <nav>
+    <a href="#" class="nav-link active" data-page="home">Home</a>
+    <a href="#" class="nav-link" data-page="results">Election Results</a>
+    <a href="#" class="nav-link" data-page="about">About</a>
+    <a href="#" class="nav-link" data-page="contact">Contact</a>
+  </nav>
+
+  <div class="container">
+    <!-- Home Page -->
+    <div id="home-page" class="page active">
+      <div class="hero">
+        <h2>Welcome to the Trinbarjam Elections Commission</h2>
+        <p>Ensuring transparent, free, and fair elections for all citizens of Trinbarjam. Our mission is to uphold democratic principles and maintain the integrity of our electoral process.</p>
+      </div>
+      
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-vote-yea"></i>
+          </div>
+          <h3>Election Results</h3>
+          <p>Access the latest election results with detailed breakdowns by constituency and candidate.</p>
+          <button class="constituency-btn" onclick="showPage('results')">View Results</button>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <h3>About Us</h3>
+          <p>Learn about our mission, values, and the important work we do to safeguard democracy.</p>
+          <button class="constituency-btn" onclick="showPage('about')">Learn More</button>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h3>Contact Us</h3>
+          <p>Get in touch with our team for inquiries, feedback, or assistance with electoral matters.</p>
+          <button class="constituency-btn" onclick="showPage('contact')">Contact</button>
+        </div>
+      </div>
+      
+      <div class="about-content">
+        <h3>Latest News & Updates</h3>
+        <p><strong>October 15, 2025:</strong> General election results have been certified for all constituencies. Official results are now available on our website.</p>
+        <p><strong>October 10, 2025:</strong> Voter turnout reached a record 72% in the recent general elections.</p>
+        <p><strong>September 28, 2025:</strong> The Commission has launched a new online portal for voter registration.</p>
+      </div>
+    </div>
+    
+    <!-- Results Page -->
+    <div id="results-page" class="page">
+      <div class="page-header">
+        <h2><i class="fas fa-chart-bar"></i> Official Election Results</h2>
+        <div>
+          <span>Last Updated: October 15, 2025</span>
+        </div>
+      </div>
+      
+      <div class="constituency-selector">
+        <button class="constituency-btn active" data-constituency="1">Constituency 1</button>
+        <button class="constituency-btn" data-constituency="2">Constituency 2</button>
+        <button class="constituency-btn" data-constituency="3">Constituency 3</button>
+      </div>
+      
+      <!-- Constituency 1 -->
+      <section id="constituency-1" class="constituency-section active">
+        <div class="constituency-header">
+          <h3>Constituency 1 - Capital District</h3>
+          <div class="election-status">
+            <span class="status-refund">Results Certified</span>
+          </div>
+        </div>
+        
+        <div class="summary-cards">
+          <div class="summary-card">
+            <h4>Registered Electors</h4>
+            <div class="value">10,345</div>
+          </div>
+          <div class="summary-card">
+            <h4>Voter Turnout</h4>
+            <div class="value">65%</div>
+          </div>
+          <div class="summary-card">
+            <h4>Total Votes Cast</h4>
+            <div class="value">6,724</div>
+          </div>
+          <div class="summary-card">
+            <h4>Spoilt Ballots</h4>
+            <div class="value">2%</div>
+          </div>
+          <div class="summary-card">
+            <h4>Valid Votes</h4>
+            <div class="value">6,589</div>
+          </div>
+        </div>
+
+        <!-- Pie Chart for Constituency 1 -->
+        <div class="chart-container">
+          <h3>Vote Distribution - Pie Chart</h3>
+          <div class="pie-chart-container">
+            <div class="pie-chart" id="pie-chart-1">
+              <div class="pie-chart-center">100%</div>
+            </div>
+            <div class="pie-legend">
+              <div class="legend-item">
+                <div class="legend-color legend-dap"></div>
+                <div class="legend-info">
+                  <div class="legend-party">DAP - John Smith</div>
+                  <div class="legend-percentage">45% (2,965 votes)</div>
+                </div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color legend-wna"></div>
+                <div class="legend-info">
+                  <div class="legend-party">WNA - Mary Jones</div>
+                  <div class="legend-percentage">30% (1,977 votes)</div>
+                </div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color legend-upm"></div>
+                <div class="legend-info">
+                  <div class="legend-party">UPM - Michael Brown</div>
+                  <div class="legend-percentage">25% (1,647 votes)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <h3>Vote Distribution - Bar Chart</h3>
+          <div class="chart" id="chart-1">
+            <!-- Chart bars will be generated by JavaScript -->
+          </div>
+        </div>
+        
+        <h3>Candidates</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Party</th>
+              <th>Rating</th>
+              <th>% of Votes</th>
+              <th>Votes Received</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="party-dap">
+              <td>John Smith</td>
+              <td>DAP</td>
+              <td class="rating">3 <i class="fas fa-star"></i></td>
+              <td>45%</td>
+              <td>2,965</td>
+              <td><span class="status-refund">Refund Due</span></td>
+            </tr>
+            <tr class="party-wna">
+              <td>Mary Jones</td>
+              <td>WNA</td>
+              <td class="rating">2 <i class="fas fa-star"></i></td>
+              <td>30%</td>
+              <td>1,977</td>
+              <td><span class="status-no-refund">No Refund</span></td>
+            </tr>
+            <tr class="party-upm">
+              <td>Michael Brown</td>
+              <td>UPM</td>
+              <td class="rating">4 <i class="fas fa-star"></i></td>
+              <td>25%</td>
+              <td>1,647</td>
+              <td><span class="status-no-refund">No Refund</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      
+      <!-- Constituency 2 -->
+      <section id="constituency-2" class="constituency-section">
+        <div class="constituency-header">
+          <h3>Constituency 2 - Northern Region</h3>
+          <div class="election-status">
+            <span class="status-refund">Results Certified</span>
+          </div>
+        </div>
+        
+        <div class="summary-cards">
+          <div class="summary-card">
+            <h4>Registered Electors</h4>
+            <div class="value">8,752</div>
+          </div>
+          <div class="summary-card">
+            <h4>Voter Turnout</h4>
+            <div class="value">72%</div>
+          </div>
+          <div class="summary-card">
+            <h4>Total Votes Cast</h4>
+            <div class="value">6,301</div>
+          </div>
+          <div class="summary-card">
+            <h4>Spoilt Ballots</h4>
+            <div class="value">1.5%</div>
+          </div>
+          <div class="summary-card">
+            <h4>Valid Votes</h4>
+            <div class="value">6,206</div>
+          </div>
+        </div>
+
+        <!-- Pie Chart for Constituency 2 -->
+        <div class="chart-container">
+          <h3>Vote Distribution - Pie Chart</h3>
+          <div class="pie-chart-container">
+            <div class="pie-chart" id="pie-chart-2">
+              <div class="pie-chart-center">100%</div>
+            </div>
+            <div class="pie-legend">
+              <div class="legend-item">
+                <div class="legend-color legend-wna"></div>
+                <div class="legend-info">
+                  <div class="legend-party">WNA - Sarah Johnson</div>
+                  <div class="legend-percentage">48% (2,979 votes)</div>
+                </div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color legend-dap"></div>
+                <div class="legend-info">
+                  <div class="legend-party">DAP - Robert Williams</div>
+                  <div class="legend-percentage">35% (2,172 votes)</div>
+                </div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color legend-upm"></div>
+                <div class="legend-info">
+                  <div class="legend-party">UPM - Jennifer Lee</div>
+                  <div class="legend-percentage">17% (1,055 votes)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <h3>Vote Distribution - Bar Chart</h3>
+          <div class="chart" id="chart-2">
+            <!-- Chart bars will be generated by JavaScript -->
+          </div>
+        </div>
+        
+        <h3>Candidates</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Party</th>
+              <th>Rating</th>
+              <th>% of Votes</th>
+              <th>Votes Received</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="party-wna">
+              <td>Sarah Johnson</td>
+              <td>WNA</td>
+              <td class="rating">4 <i class="fas fa-star"></i></td>
+              <td>48%</td>
+              <td>2,979</td>
+              <td><span class="status-refund">Refund Due</span></td>
+            </tr>
+            <tr class="party-dap">
+              <td>Robert Williams</td>
+              <td>DAP</td>
+              <td class="rating">3 <i class="fas fa-star"></i></td>
+              <td>35%</td>
+              <td>2,172</td>
+              <td><span class="status-no-refund">No Refund</span></td>
+            </tr>
+            <tr class="party-upm">
+              <td>Jennifer Lee</td>
+              <td>UPM</td>
+              <td class="rating">2 <i class="fas fa-star"></i></td>
+              <td>17%</td>
+              <td>1,055</td>
+              <td><span class="status-no-refund">No Refund</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      
+      <!-- Constituency 3 -->
+      <section id="constituency-3" class="constituency-section">
+        <div class="constituency-header">
+          <h3>Constituency 3 - Eastern District</h3>
+          <div class="election-status">
+            <span class="status-refund">Results Certified</span>
+          </div>
+        </div>
+        
+        <div class="summary-cards">
+          <div class="summary-card">
+            <h4>Registered Electors</h4>
+            <div class="value">12,458</div>
+          </div>
+          <div class="summary-card">
+            <h4>Voter Turnout</h4>
+            <div class="value">68%</div>
+          </div>
+          <div class="summary-card">
+            <h4>Total Votes Cast</h4>
+            <div class="value">8,471</div>
+          </div>
+          <div class="summary-card">
+            <h4>Spoilt Ballots</h4>
+            <div class="value">2.2%</div>
+          </div>
+          <div class="summary-card">
+            <h4>Valid Votes</h4>
+            <div class="value">8,285</div>
+          </div>
+        </div>
+
+        <!-- Pie Chart for Constituency 3 -->
+        <div class="chart-container">
+          <h3>Vote Distribution - Pie Chart</h3>
+          <div class="pie-chart-container">
+            <div class="pie-chart" id="pie-chart-3">
+              <div class="pie-chart-center">100%</div>
+            </div>
+            <div class="pie-legend">
+              <div class="legend-item">
+                <div class="legend-color legend-upm"></div>
+                <div class="legend-info">
+                  <div class="legend-party">UPM - David Chen</div>
+                  <div class="legend-percentage">42% (3,480 votes)</div>
+                </div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color legend-dap"></div>
+                <div class="legend-info">
+                  <div class="legend-party">DAP - Lisa Garcia</div>
+                  <div class="legend-percentage">38% (3,148 votes)</div>
+                </div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color legend-wna"></div>
+                <div class="legend-info">
+                  <div class="legend-party">WNA - Thomas Wright</div>
+                  <div class="legend-percentage">20% (1,657 votes)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <h3>Vote Distribution - Bar Chart</h3>
+          <div class="chart" id="chart-3">
+            <!-- Chart bars will be generated by JavaScript -->
+          </div>
+        </div>
+        
+        <h3>Candidates</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Party</th>
+              <th>Rating</th>
+              <th>% of Votes</th>
+              <th>Votes Received</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="party-upm">
+              <td>David Chen</td>
+              <td>UPM</td>
+              <td class="rating">5 <i class="fas fa-star"></i></td>
+              <td>42%</td>
+              <td>3,480</td>
+              <td><span class="status-refund">Refund Due</span></td>
+            </tr>
+            <tr class="party-dap">
+              <td>Lisa Garcia</td>
+              <td>DAP</td>
+              <td class="rating">3 <i class="fas fa-star"></i></td>
+              <td>38%</td>
+              <td>3,148</td>
+              <td><span class="status-no-refund">No Refund</span></td>
+            </tr>
+            <tr class="party-wna">
+              <td>Thomas Wright</td>
+              <td>WNA</td>
+              <td class="rating">2 <i class="fas fa-star"></i></td>
+              <td>20%</td>
+              <td>1,657</td>
+              <td><span class="status-no-refund">No Refund</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+    
+    <!-- About Page -->
+    <div id="about-page" class="page">
+      <div class="page-header">
+        <h2><i class="fas fa-info-circle"></i> About the Trinbarjam Elections Commission</h2>
+      </div>
+      
+      <div class="about-content">
+        <h3>Our Mission</h3>
+        <p>The Trinbarjam Elections Commission is an independent body established to organize, supervise, and conduct all elections in Trinbarjam. Our primary mission is to ensure that elections are free, fair, transparent, and conducted in accordance with democratic principles and the laws of Trinbarjam.</p>
+        
+        <h3>Our History</h3>
+        <p>Established in 1985 following the democratic reforms, the Commission has played a pivotal role in strengthening democracy in Trinbarjam. Over the years, we have successfully conducted 10 general elections and numerous local elections, earning recognition for our commitment to electoral integrity.</p>
+        
+        <div class="mission-vision">
+          <div class="mission">
+            <h3>Our Values</h3>
+            <ul>
+              <li><strong>Integrity:</strong> We maintain the highest ethical standards in all our operations.</li>
+              <li><strong>Transparency:</strong> We ensure that all electoral processes are open to public scrutiny.</li>
+              <li><strong>Impartiality:</strong> We treat all political parties and candidates equally.</li>
+              <li><strong>Accountability:</strong> We take responsibility for our actions and decisions.</li>
+              <li><strong>Efficiency:</strong> We strive to deliver excellent service with optimal use of resources.</li>
+            </ul>
+          </div>
+          
+          <div class="vision">
+            <h3>Our Vision</h3>
+            <p>To be a world-class electoral management body that strengthens democracy through credible, inclusive, and transparent elections, fostering public trust in the electoral process and contributing to the consolidation of democratic governance in Trinbarjam.</p>
+          </div>
+        </div>
+        
+        <h3>Key Functions</h3>
+        <p>The Commission performs several critical functions to ensure the integrity of the electoral process:</p>
+        <ul>
+          <li>Voter registration and maintenance of electoral rolls</li>
+          <li>Delimitation of constituencies</li>
+          <li>Registration of political parties</li>
+          <li>Monitoring election campaigns and expenditures</li>
+          <li>Conducting polling and counting of votes</li>
+          <li>Declaring election results</li>
+          <li>Voter education and awareness programs</li>
+        </ul>
+        
+        <h3>Our Team</h3>
+        <p>The Commission is composed of a Chairperson and four Commissioners appointed through a transparent process. Our dedicated staff of electoral professionals work tirelessly to ensure that every election meets the highest standards of fairness and transparency.</p>
+      </div>
+    </div>
+    
+    <!-- Contact Page -->
+    <div id="contact-page" class="page">
+      <div class="page-header">
+        <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+      </div>
+      
+      <div class="about-content">
+        <h3>Get in Touch</h3>
+        <p>We welcome your questions, comments, and feedback. Please feel free to contact us using the information below:</p>
+        
+        <div class="mission-vision">
+          <div class="mission">
+            <h3>Headquarters</h3>
+            <p><i class="fas fa-map-marker-alt"></i> 123 Democracy Avenue<br>Capital City, Trinbarjam 10001</p>
+            <p><i class="fas fa-phone"></i> (876) 555-1234</p>
+            <p><i class="fas fa-envelope"></i> info@trinbarjamcommission.org</p>
+          </div>
+          
+          <div class="vision">
+            <h3>Office Hours</h3>
+            <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+            <p>Saturday: 9:00 AM - 1:00 PM</p>
+            <p>Sunday: Closed</p>
+          </div>
+        </div>
+        
+        <h3>Regional Offices</h3>
+        <p>We have regional offices across Trinbarjam to serve you better:</p>
+        <ul>
+          <li><strong>Northern Region Office:</strong> 45 Freedom Street, Northern City - (876) 555-2345</li>
+          <li><strong>Southern Region Office:</strong> 78 Justice Road, Southern Town - (876) 555-3456</li>
+          <li><strong>Eastern Region Office:</strong> 12 Equality Lane, Eastern Village - (876) 555-4567</li>
+          <li><strong>Western Region Office:</strong> 33 Liberty Boulevard, Western City - (876) 555-5678</li>
+        </ul>
+        
+        <h3>Feedback Form</h3>
+        <p>For specific inquiries or feedback, please use our online form:</p>
+
+        <form id="feedback-form" action="https://formspree.io/f/xeoranek" method="POST" style="margin-top: 20px;">
+          <input type="hidden" name="_subject" value="New Message from Trinbarjam Elections Commission Website">
+          
+          <div class="form-group">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" name="name" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" id="email" name="email" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="subject" class="form-label">Subject:</label>
+            <input type="text" id="subject" name="_subject" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="message" class="form-label">Message:</label>
+            <textarea id="message" name="message" rows="5" class="form-textarea" required></textarea>
+          </div>
+          
+          <button type="submit" class="submit-btn">
+            <span id="submit-text">Send Message</span>
+            <div id="submit-spinner" style="display: none;">
+              <i class="fas fa-spinner fa-spin"></i> Sending...
+            </div>
+          </button>
+          
+          <div id="form-message" class="form-message" style="display: none;"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Trinbarjam Elections Commission</h3>
+        <p>Ensuring free, fair, and transparent elections for the people of Trinbarjam.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <a href="#" class="nav-link" data-page="home">Home</a>
+        <a href="#" class="nav-link" data-page="results">Election Results</a>
+        <a href="#" class="nav-link" data-page="about">About Us</a>
+        <a href="#" class="nav-link" data-page="contact">Contact</a>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Contact Information</h3>
+        <p><i class="fas fa-envelope"></i> info@trinbarjamcommission.org</p>
+        <p><i class="fas fa-phone"></i> (876) 555-1234</p>
+        <p><i class="fas fa-map-marker-alt"></i> 123 Democracy Avenue, Capital City, Trinbarjam</p>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>&copy; 2025 Trinbarjam Elections Commission. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Page navigation functionality
+    function showPage(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      
+      // Remove active class from all nav links
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+      
+      // Show the selected page
+      document.getElementById(`${pageId}-page`).classList.add('active');
+      
+      // Add active class to the clicked nav link
+      document.querySelector(`.nav-link[data-page="${pageId}"]`).classList.add('active');
+    }
+    
+    // Add event listeners to nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function() {
+        const pageId = this.getAttribute('data-page');
+        showPage(pageId);
+      });
+    });
+    
+    // Constituency selector functionality
+    document.querySelectorAll('.constituency-btn').forEach(button => {
+      if (button.getAttribute('data-constituency')) {
+        button.addEventListener('click', function() {
+          // Remove active class from all buttons and sections
+          document.querySelectorAll('.constituency-btn').forEach(btn => {
+            btn.classList.remove('active');
+          });
+          document.querySelectorAll('.constituency-section').forEach(section => {
+            section.classList.remove('active');
+          });
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+          
+          // Show corresponding section
+          const constituencyId = this.getAttribute('data-constituency');
+          document.getElementById(`constituency-${constituencyId}`).classList.add('active');
+          
+          // Update charts for the active constituency
+          updateCharts();
+        });
+      }
+    });
+    
+    // Function to create bar charts
+    function createChart(containerId, data) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      const maxVotes = Math.max(...data.map(item => item.votes));
+      
+      data.forEach(item => {
+        const barHeight = (item.votes / maxVotes) * 100;
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = `${barHeight}%`;
+        bar.innerHTML = `
+          <div class="bar-value">${item.votes.toLocaleString()}</div>
+          <div class="bar-label">${item.party}</div>
+        `;
+        container.appendChild(bar);
+      });
+    }
+
+    // Function to create pie charts
+    function createPieCharts() {
+      // Pie chart data for each constituency
+      const pieData = {
+        1: [
+          { party: 'DAP', percentage: 45, color: '#ff0000' },
+          { party: 'WNA', percentage: 30, color: '#0000ff' },
+          { party: 'UPM', percentage: 25, color: '#00aa00' }
+        ],
+        2: [
+          { party: 'WNA', percentage: 48, color: '#0000ff' },
+          { party: 'DAP', percentage: 35, color: '#ff0000' },
+          { party: 'UPM', percentage: 17, color: '#00aa00' }
+        ],
+        3: [
+          { party: 'UPM', percentage: 42, color: '#00aa00' },
+          { party: 'DAP', percentage: 38, color: '#ff0000' },
+          { party: 'WNA', percentage: 20, color: '#0000ff' }
+        ]
+      };
+
+      // Create pie charts for each constituency
+      Object.keys(pieData).forEach(constituency => {
+        const pieChart = document.getElementById(`pie-chart-${constituency}`);
+        if (pieChart) {
+          const data = pieData[constituency];
+          let conicGradient = '';
+          let currentPercentage = 0;
+          
+          data.forEach((item, index) => {
+            const start = currentPercentage;
+            const end = currentPercentage + item.percentage;
+            conicGradient += `${item.color} ${start}% ${end}%`;
+            if (index < data.length - 1) {
+              conicGradient += ', ';
+            }
+            currentPercentage = end;
+          });
+          
+          pieChart.style.background = `conic-gradient(${conicGradient})`;
+        }
+      });
+    }
+    
+    // Function to update all charts
+    function updateCharts() {
+      // Chart data for each constituency
+      const chartData = {
+        1: [
+          { party: 'DAP', votes: 2965 },
+          { party: 'WNA', votes: 1977 },
+          { party: 'UPM', votes: 1647 }
+        ],
+        2: [
+          { party: 'WNA', votes: 2979 },
+          { party: 'DAP', votes: 2172 },
+          { party: 'UPM', votes: 1055 }
+        ],
+        3: [
+          { party: 'UPM', votes: 3480 },
+          { party: 'DAP', votes: 3148 },
+          { party: 'WNA', votes: 1657 }
+        ]
+      };
+      
+      // Create charts for each constituency
+      Object.keys(chartData).forEach(constituency => {
+        createChart(`chart-${constituency}`, chartData[constituency]);
+      });
+
+      // Create pie charts
+      createPieCharts();
+    }
+
+    // Email form functionality
+    document.getElementById('feedback-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submit-btn');
+      const submitText = document.getElementById('submit-text');
+      const submitSpinner = document.getElementById('submit-spinner');
+      const formMessage = document.getElementById('form-message');
+      
+      // Show loading state
+      submitText.style.display = 'none';
+      submitSpinner.style.display = 'block';
+      submitBtn.disabled = true;
+      formMessage.style.display = 'none';
+      
+      // Get form data
+      const formData = new FormData(this);
+      
+      // Submit to Formspree
+      fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          formMessage.textContent = 'Thank you! Your message has been sent successfully. We will get back to you soon.';
+          formMessage.className = 'form-message form-success';
+          formMessage.style.display = 'block';
+          document.getElementById('feedback-form').reset();
+        } else {
+          return response.json().then(err => { throw err; });
+        }
+      })
+      .catch(error => {
+        formMessage.textContent = 'Sorry, there was an error sending your message. Please try again later or email us directly at info@trinbarjamcommission.org';
+        formMessage.className = 'form-message form-error';
+        formMessage.style.display = 'block';
+        console.error('Form error:', error);
+      })
+      .finally(() => {
+        submitText.style.display = 'block';
+        submitSpinner.style.display = 'none';
+        submitBtn.disabled = false;
+      });
+    });
+    
+    // Initialize charts on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCharts();
+    });
+  </script>
+</body>
+</html>
